@@ -1,15 +1,15 @@
 // utils/openai.js
-import { Configuration, OpenAIApi } from "openai";
+// import { Configuration, OpenAIApi } from "openai";
+import OpenAI from 'openai';
 
-const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
+const openai = new OpenAI({
+    dangerouslyAllowBrowser: true ,
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
-
-export async function generateJoke(prompt) {
+export async function generateJokewithOpenAi(prompt) {
     try {
-        const response = await openai.createCompletion({
-            model: "text-davinci-003",
+        const response = await openai.chat.completions.create({
+            model: "gpt-3.5-turbo",
             prompt: `Tell me a joke about ${prompt}:`,
             temperature: 0.5,
             max_tokens: 60,
@@ -20,6 +20,6 @@ export async function generateJoke(prompt) {
         return response.data.choices[0].text.trim();
     } catch (error) {
         console.error("Error generating joke:", error);
-        return "Failed to generate a joke. Please try again.";
+        return "Failed to generate a joke.Open Api Limit Exceeded";
     }
 }
