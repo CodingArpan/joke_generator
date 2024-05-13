@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabaseClient";
 import { useRouter } from "next/router";
 import { generateJokewithOpenAi } from "@/utils/openai";
-import { generateJokewithPunchlinesAi } from "@/utils/punchlinesai";
+import { generateJokewithGemini } from "@/utils/gemini";
 
 export default function Home() {
   const [Email, setEmail] = useState("")
   const [UserTopic, setUserTopic] = useState("")
-  const [Joke, setJoke] = useState([])
+  const [Joke, setJoke] = useState()
   useEffect(() => {
     // check local storage for user data
     const data = JSON.parse(localStorage.getItem("sb-fotcxlpibcxnzftqmdfw-auth-token"));
@@ -28,10 +28,11 @@ export default function Home() {
       alert("Please Enter a Topic")
       return
     }
-    const joke = await generateJokewithOpenAi(UserTopic)
+    const joke = await generateJokewithGemini(UserTopic);
 
     alert(joke)
-   
+    setJoke([joke])
+
   }
   return (
     <>
@@ -57,15 +58,11 @@ export default function Home() {
       </div>
 
       <div className="alljokes">
-        {
-          Joke.map((joke, index) => {
-            return (
-              <div key={index} className="flex flex-col justify-center items-center space-x-2 gap-10  p-10">
-                <p className="text-2xl font-bold">{joke}</p>
+        
+              <div  className="flex flex-col justify-center items-center space-x-2 gap-10  p-10">
+          <p className="text-2xl font-bold">{Joke}</p>
               </div>
-            )
-          })
-        }
+         
 
 
       </div>
